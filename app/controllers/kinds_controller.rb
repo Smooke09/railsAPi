@@ -1,6 +1,7 @@
 class KindsController < ApplicationController
   before_action :set_kind, only: [:show, :update, :destroy]
 
+
   # GET /kinds
   def index
     @kinds = Kind.all
