@@ -1,34 +1,38 @@
-class AddressesController < ApplicationController
+module V1
+class PhonesController < ApplicationController
     before_action :set_contact
   
-    # DELETE /contacts/1/address
+    # DELETE /contacts/1/phones
     def destroy
-      @contact.address.destroy
+      phone = Phone.find(phone_params[:id])
+      phone.destroy
     end
   
-    # POST /contacts/1/address
+    # POST /contacts/1/phone
     def create
-      @contact.address = Address.new(address_params)
+      @contact.phones << Phone.new(phone_params)
   
       if @contact.save
-        render json: @contact.address, status: :created, location: contact_address_url(@contact)
+        render json: @contact.phones, status: :created, location: contact_phones_url(@contact)
       else
         render json: @contact.errors, status: :unprocessable_entity
       end
     end
   
-    # PATCH /contacts/1/address
+    # PATCH /contacts/1/phone
     def update
-      if @contact.address.update(address_params)
-        render json: @contact.address
+      phone = Phone.find(phone_params[:id])
+  
+      if phone.update(phone_params)
+        render json: @contact.phones
       else
         render json: @contact.errors, status: :unprocessable_entity
       end
     end
   
-    # GET /contacts/1/address
+    # GET /contacts/1/phones
     def show
-      render json: @contact.address
+      render json: @contact.phones
     end
   
     private
@@ -37,7 +41,8 @@ class AddressesController < ApplicationController
         @contact = Contact.find(params[:contact_id])
       end
   
-      def address_params
+      def phone_params
         ActiveModelSerializers::Deserialization.jsonapi_parse(params)
       end
   end
+end
