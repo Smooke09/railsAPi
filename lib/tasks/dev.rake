@@ -2,7 +2,8 @@ namespace :dev do
   desc "Configura o ambiente de desenvolvimento"
   task setup: :environment do
     puts("Configurando ambiente de desenvolvimento...")
-    %x(rails db:drop db:create db:migrate)
+    
+    #%x(rails db:drop db:create db:migrate)
 
     puts "Cadastrando os tipos de contatos..."
     kinds = %w(Amigo Comercial Conhecido)

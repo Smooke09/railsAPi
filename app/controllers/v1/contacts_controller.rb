@@ -5,14 +5,16 @@ class ContactsController < ApplicationController
 
   # GET /contacts
   def index
-    @contacts = Contact.all.page(params[:page].try(:[], :number)).per(params[:page].try(:[], :size))
-    #paginate json: @contacts #, methods: :birthdate_br #[:hello, :i18n]
-    render json: @contacts #, methods: :birthdate_br #[:hello, :i18n]
-  end
+    page_number = params[:page].try(:[], :number)
+    per_page = params[:page].try(:[], :size)
 
-  # GET /contacts/1
-  def show
-    render json: @contact , include: [:kind, :address, :phones] #, include: [:kind, :phones, :address]
+    @contacts = Contact.all.page(page_number).per(per_page)
+
+    # Cache-Control --- expires_in 30.seconds, public: true
+    if stale?(etag: @contacts)
+      render  json: @contacts #, methods: :birthdate_br #[:hello, :i18n]
+    end
+    # paginate json: @contacts #, methods: :birthdate_br #[:hello, :i18n]
   end
 
   # POST /contacts
@@ -29,7 +31,7 @@ class ContactsController < ApplicationController
   # PATCH/PUT /contacts/1
   def update
     if @contact.update(contact_params)
-      render json: @contact, include: [:kind, :phones, :address]
+      render json: @contact, #include: [:kind, :phones, :address]
     else
       render json: @contact.errors, status: :unprocessable_entity
     end

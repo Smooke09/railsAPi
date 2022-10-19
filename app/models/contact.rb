@@ -1,7 +1,7 @@
 class Contact < ApplicationRecord
 
     #validations
-    validates_presence_of :kind_id, :address
+    validates_presence_of :kind_id#, :address
 
 
     #kaminari
